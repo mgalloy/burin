@@ -14,6 +14,9 @@ setup(name='burin',
       description='Python library for visualization',
       long_description=read('README.md'),
       packages=['burin'],
+      setup_requires=['pytest-runner'],
+      tests_require=['pytest'],
+      test_suite='unit',
       classifiers=[
           'Development Status :: 4 - Beta'
       ],
