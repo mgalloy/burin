@@ -1,11 +1,14 @@
 VERSION=`python setup.py --version`
 
-.PHONY: clean test dist
+.PHONY: clean dist test unit
 
 clean:
 	echo "cleaning..."
 
 test:
+	python setup.py test
+
+unit:
 	python setup.py test
 
 dist:
