@@ -1,9 +1,13 @@
 VERSION=`python setup.py --version`
 
-.PHONY: clean dist test unit
+.PHONY: clean dist doc test unit
 
 clean:
 	echo "cleaning..."
+
+doc:
+	sphinx-apidoc -o docs/_api burin
+	cd docs; make html
 
 test:
 	python setup.py test
