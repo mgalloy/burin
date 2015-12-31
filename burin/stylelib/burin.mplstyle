@@ -1,0 +1,135 @@
+# figure properties
+
+figure.autolayout:           true
+#figure.dpi:                  80.0
+figure.edgecolor:            black
+figure.facecolor:            white
+figure.figsize:              8.0, 6.0
+figure.frameon:              false
+figure.max_open_warning:     20
+figure.subplot.bottom:       0.07
+figure.subplot.hspace:       0.2
+figure.subplot.left:         0.08
+figure.subplot.right:        0.95
+figure.subplot.top:          0.9
+figure.subplot.wspace:       0.2
+
+
+# patch properties
+
+patch.antialiased:           true
+patch.edgecolor:             f0f0f0
+patch.facecolor:             8b8b8b
+patch.linewidth:             0.5
+
+
+# line properties
+
+lines.antialiased:           true
+lines.color:                 r
+lines.dash_capstyle:         butt
+lines.dash_joinstyle:        round
+lines.linestyle:             -
+lines.linewidth:             1.0
+lines.marker:
+lines.markeredgewidth:       0.5
+lines.markersize:            6.0
+lines.solid_capstyle:        butt
+lines.solid_joinstyle:       round
+
+
+# legend properties
+
+legend.borderaxespad:        0.5
+legend.borderpad:            0.4
+legend.columnspacing:        2.0
+legend.fancybox:             false
+legend.fontsize:             medium
+legend.framealpha:           0.8
+legend.frameon:              true
+legend.handleheight:         0.7
+legend.handlelength:         2.0
+legend.handletextpad:        0.8
+legend.isaxes:               true
+legend.labelspacing:         0.5
+legend.loc:                  upper right
+legend.markerscale:          1.75
+legend.numpoints:            2
+legend.scatterpoints:        1
+legend.shadow:               false
+
+
+# axes properties
+
+axes.axisbelow:              true
+axes.color_cycle:            a6cee3, 1f78b4, b2df8a, 33a02c, fb9a99, e31a1c, fdbf6f, ff7f00, cab2d6, 6a3d9a, ffff99, b15928
+axes.edgecolor:              k
+axes.facecolor:              w
+axes.formatter.limits:       -7, 7
+axes.formatter.use_locale:   false
+axes.formatter.use_mathtext: false
+axes.formatter.useoffset:    true
+axes.grid:                   true
+axes.grid.which:             major
+axes.hold:                   true
+axes.labelcolor:             k
+axes.labelsize:              medium
+axes.labelweight:            normal
+axes.linewidth:              0.75
+axes.titlesize:              large
+axes.titleweight:            normal
+axes.unicode_minus:          true
+axes.xmargin:                0.0
+axes.ymargin:                0.0
+
+axes3d.grid:                 true
+
+
+# SVG properties
+
+svg.fonttype:                path
+
+
+# grid properties
+
+grid.alpha:                  0.5
+grid.color:                  dbdbdb
+grid.linestyle:              -
+grid.linewidth:              0.5
+
+
+# xtick/ytick properties
+
+xtick.color: k
+xtick.direction: out
+xtick.labelsize: medium
+xtick.major.pad: 4.0
+xtick.major.size: 0.0
+xtick.major.width: 0.5
+xtick.minor.pad: 4.0
+xtick.minor.size: 0.0
+xtick.minor.width: 0.5
+ytick.color: k
+ytick.direction: out
+ytick.labelsize: medium
+ytick.major.pad: 4.0
+ytick.major.size: 0.0
+ytick.major.width: 0.5
+ytick.minor.pad: 4.0
+ytick.minor.size: 0.0
+ytick.minor.width: 0.5
+
+
+# font properties
+
+font.size: 12.0
+
+
+# image properties
+
+image.aspect:                equal
+image.cmap:                  Greys
+image.interpolation:         bilinear
+image.lut:                   256
+image.origin:                upper
+image.resample:              false
