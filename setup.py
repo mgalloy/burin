@@ -1,5 +1,14 @@
 import os
-from setuptools import setup
+
+import numpy
+from setuptools import setup, Extension
+
+numpy_include_dir = os.path.join(os.path.dirname(numpy.__file__), 'core', 'include')
+
+flow_module = Extension('flow',
+                        sources=['burin/flow.c'],
+                        include_dirs=[numpy_include_dir])
+
 
 def read(fname):
     '''Easy way to read a top-level file such as the README.rst file.
@@ -14,6 +23,7 @@ setup(name='burin',
       description='Python library for visualization',
       long_description=read('README.md'),
       packages=['burin'],
+      ext_modules=[flow_module],
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
       test_suite='unit',
