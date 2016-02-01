@@ -2,12 +2,12 @@ import os
 
 import numpy
 from setuptools import setup, Extension
+import numpy.distutils.misc_util
 
-numpy_include_dir = os.path.join(os.path.dirname(numpy.__file__), 'core', 'include')
 
-flow_module = Extension('flow',
+flow_module = Extension('burin.flow',
                         sources=['burin/flow.c'],
-                        include_dirs=[numpy_include_dir])
+                        include_dirs=numpy.distutils.misc_util.get_numpy_include_dirs())
 
 
 def read(fname):
@@ -27,9 +27,7 @@ setup(name='burin',
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
       test_suite='unit',
-      classifiers=[
-          'Development Status :: 4 - Beta'
-      ],
+      classifiers=['Development Status :: 4 - Beta'],
       install_requires=[
           'matplotlib',
           'numpy',

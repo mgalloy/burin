@@ -45,7 +45,7 @@ static PyMethodDef flow_methods[] = {
 };
 
 PyMODINIT_FUNC initflow(void) {
-  PyObject *m = Py_InitModule("flow", flow_methods);
-#pragma unused(m)
+  PyObject *m = Py_InitModule3("flow", flow_methods, "Flow routines.");
+  if (m == NULL) return;
   import_array();
 }
