@@ -5,9 +5,9 @@ from setuptools import setup, Extension
 import numpy.distutils.misc_util
 
 
-flow_module = Extension('burin.flow',
-                        sources=['burin/flow.c'],
-                        include_dirs=numpy.distutils.misc_util.get_numpy_include_dirs())
+#flow_module = Extension('burin.flow',
+#                        sources=['burin/flow.c'],
+#                        include_dirs=numpy.distutils.misc_util.get_numpy_include_dirs())
 
 
 def read(fname):
@@ -23,7 +23,7 @@ setup(name='burin',
       description='Python library for visualization',
       long_description=read('README.md'),
       packages=['burin'],
-      ext_modules=[flow_module],
+#      ext_modules=[flow_module],
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
       test_suite='unit',
