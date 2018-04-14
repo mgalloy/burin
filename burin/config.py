@@ -11,17 +11,31 @@ class VerifiedConfigParser(configparser.ConfigParser):
         self.specification = configparser.ConfigParser()
         self.specification.read(spec_filename)
 
-    def verify(self, f):
-        '''Verify that the given config file matches the specification.
+    def _apply_bool(self, value):
+        '''Converts value string to bool. Accepts case-insensitive yes/no or
+           true/false. Unknown values raise TypeError.
         '''
-        config = configparser.ConfigParser()
-        config.read(f)
-        for s in config.sections():
-            for o in config.options(s):
-                if not self.specification.has_option(s, o):
-                    return False
+        lower_value = value.lower()
+        if lower_value in ['yes', 'true']:
+            return True
+        elif lower_value in ['no', 'false']:
+            return False
+        else:
+            raise TypeError
 
-        return True
+        return False
+
+    def _apply_type(self, option_type, value):
+        '''Apply option_type to value. Special rules for bool type to convert
+           yes/no or true/false strings
+        '''
+        if value is None:
+            return None
+
+        if option_type == bool:
+            return self._apply_bool(value)
+        else:
+            return option_type(value)
 
     def get_spec(self, section, option):
         '''Get specification for a given option. Returns a dict with keys
@@ -41,7 +55,7 @@ class VerifiedConfigParser(configparser.ConfigParser):
             else:
                 pass
 
-        spec = {'type': _type, 'default': _type(_default)}
+        spec = {'type': _type, 'default': self._apply_type(_type, _default)}
         return spec
 
     def verified_get(self, section, option, raw=False):
@@ -54,4 +68,27 @@ class VerifiedConfigParser(configparser.ConfigParser):
 
         value = super().get(section, option, raw=raw)
 
-        return(spec['type'](value))
+        return(self._apply_type(spec['type'], value))
+
+    def verify(self, f):
+        '''Verify that the given config file matches the specification.
+        '''
+        config = configparser.ConfigParser()
+        config.read(f)
+
+        # check that every option given by f is in specification
+        for s in config.sections():
+            for o in config.options(s):
+                if not self.specification.has_option(s, o):
+                    return False
+
+        # check that all options without a default value are given by f
+        for s in self.specification.sections():
+            for o in self.specification.options(s):
+                spec = self.get_spec(s, o)
+                print(spec['default'])
+                if spec['default'] is None:
+                    if not config.has_option(s, o):
+                        return False
+
+        return True
