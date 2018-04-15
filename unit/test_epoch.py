@@ -3,12 +3,12 @@ import os
 import burin
 
 
-def test_epoch_verify():
+def test_epoch_validate():
     d = os.path.dirname(os.path.realpath(__file__))
     epochs_filename = os.path.join(d, 'epochs.cfg')
     spec_filename = os.path.join(d, 'epochs_spec.cfg')
     ep = burin.config.EpochParser(epochs_filename, spec_filename)
-    assert(ep.verify())
+    assert(ep.validate())
 
 
 def test_epoch_get():

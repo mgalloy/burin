@@ -3,19 +3,19 @@ import os
 import burin
 
 
-def test_config_verify():
+def test_config_validate():
     d = os.path.dirname(os.path.realpath(__file__))
-    vcp = burin.config.VerifiedConfigParser(os.path.join(d, 'spec.cfg'))
+    vcp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
 
-    assert(vcp.verify(os.path.join(d, 'good.cfg')))
-    assert(not vcp.verify(os.path.join(d, 'missing_option.cfg')))
-    assert(not vcp.verify(os.path.join(d, 'extra_option.cfg')))
-    assert(not vcp.verify(os.path.join(d, 'extra_section.cfg')))
+    assert(vcp.validate(os.path.join(d, 'good.cfg')))
+    assert(not vcp.validate(os.path.join(d, 'missing_option.cfg')))
+    assert(not vcp.validate(os.path.join(d, 'extra_option.cfg')))
+    assert(not vcp.validate(os.path.join(d, 'extra_section.cfg')))
 
 
 def test_config_verified_get():
     d = os.path.dirname(os.path.realpath(__file__))
-    vcp = burin.config.VerifiedConfigParser(os.path.join(d, 'spec.cfg'))
+    vcp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
     vcp.read(os.path.join(d, 'good.cfg'))
 
     basedir = vcp.verified_get('logging', 'basedir')
@@ -31,7 +31,7 @@ def test_config_verified_get():
 def test_config_verified_get_list():
     return
     d = os.path.dirname(os.path.realpath(__file__))
-    vcp = burin.config.VerifiedConfigParser(os.path.join(d, 'spec.cfg'))
+    vcp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
     vcp.read(os.path.join(d, 'good.cfg'))
 
     wavelengths = vcp.verified_get('level1', 'wavelengths')

@@ -61,7 +61,7 @@ def _parse_spec(spec, section, option):
     return(_parse_specline(specline))
 
 
-class VerifiedConfigParser(configparser.ConfigParser):
+class ConfigParser(configparser.ConfigParser):
     '''ConfigParser subclass which can verify a config file against a specification
        and uses types/defaults from the specification.
     '''
@@ -83,7 +83,7 @@ class VerifiedConfigParser(configparser.ConfigParser):
 
         return(_apply_type(spec['type'], value))
 
-    def verify(self, f):
+    def validate(self, f):
         '''Verify that the given config file matches the specification.
         '''
         config = configparser.ConfigParser()
@@ -145,7 +145,7 @@ class EpochParser:
 
         return _apply_type(specs[option]['type'], last[2])
 
-    def verify(self):
+    def validate(self):
         '''Verify that all the variables in the epochs file are given in the
            specification file.
         '''
