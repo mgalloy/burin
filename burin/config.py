@@ -1,10 +1,11 @@
 import collections
 import configparser
 import datetime
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, TypeVar
 
+OptionValue = TypeVar('OptionValue', bool, float, int, str)
 
-TYPES = {'int': int, 'bool': bool, 'str': str, 'float': float}
+TYPES = {'bool': bool, 'float': float, 'int': int, 'str': str}
 
 
 def _apply_bool(value: str) -> bool:
@@ -22,7 +23,7 @@ def _apply_bool(value: str) -> bool:
     return False
 
 
-def _apply_type(option_type: Callable[[str], Any], value: str) -> Any:
+def _apply_type(option_type: Callable[[str], OptionValue], value: str) -> OptionValue:
     '''Apply option_type to value. Special rules for bool type to convert
        yes/no or true/false strings
     '''
@@ -35,7 +36,7 @@ def _apply_type(option_type: Callable[[str], Any], value: str) -> Any:
         return option_type(value)
 
 
-def _parse_specline(specline: str) -> Dict[str, Any]:
+def _parse_specline(specline: str) -> Dict[str, OptionValue]:
     '''Parse a sting specline
     '''
     option_type = str
@@ -56,7 +57,7 @@ def _parse_specline(specline: str) -> Dict[str, Any]:
     return spec
 
 
-def _parse_spec(spec: configparser.ConfigParser, section: str, option: str) -> Dict[str, Any]:
+def _parse_spec(spec: configparser.ConfigParser, section: str, option: str) -> Dict[str, OptionValue]:
     '''Get specification for a given option. Returns a dict with keys
        "type" and "default".
     '''
@@ -74,7 +75,7 @@ class ConfigParser(configparser.ConfigParser):
         self.specification = configparser.ConfigParser()
         self.specification.read(spec_filename)
 
-    def verified_get(self, section: str, option: str, raw=False) -> Any:
+    def verified_get(self, section: str, option: str, raw=False) -> OptionValue:
         '''Get an option using the type and default from the specification file.
         '''
         spec = _parse_spec(self.specification, section, option)
@@ -133,7 +134,7 @@ class EpochParser:
 
         self.date = '00000000.000000'
 
-    def get(self, option: str) -> Any:
+    def get(self, option: str) -> OptionValue:
         '''Get an option from the epoch closest, but before, the current time.
         '''
         now = parse_datetime(self.date)
