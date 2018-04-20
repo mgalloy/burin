@@ -24,18 +24,18 @@ def example_ftdistance(d):
 
 
 if __name__ == '__main__':
-    temp = 5.0
+    t = 5.0
     functions = [example_ctemp, example_ftemp]
     units = ['C', 'F']
-    print 'Example temperature conversions'
+    print('Example temperature conversions')
     for f in functions:
         for u in units:
-            print '%5.1f %s -> %5.1f %s' % (temp, f.units, f(temp, units=u), u)
+            print('%5.1f %s -> %5.1f %s' % (t, f.units, f(t, units=u), u))
 
     d = 1.0
     functions = [example_mdistance, example_ftdistance]
     units = ['m', 'ft']
-    print 'Example distance conversions'
+    print('Example distance conversions')
     for f in functions:
         for u in units:
-            print '%6.2f %-2s -> %4.2f %-2s' % (d, f.units, f(d, units=u), u)
+            print('%6.2f %-2s -> %4.2f %-2s' % (d, f.units, f(d, units=u), u))

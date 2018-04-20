@@ -19,9 +19,9 @@ for i in range(8):
                      label='data set %d' % i,
                      color=cmap(c[i]),
                      edgecolor='w')
-    
+
 plt.legend()
 plt.title('Default burin scatter plot')
 plt.show()
 
-#print mpl.rcParams
+# print mpl.rcParams

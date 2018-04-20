@@ -22,7 +22,7 @@ def test_config_verified_get():
     assert(basedir == '/Users/mgalloy/data')
 
     rotate = vcp.verified_get('logging', 'rotate')
-    assert(rotate == False)
+    assert(not rotate)
 
     max_version = vcp.verified_get('logging', 'max_version')
     assert(max_version == 3)

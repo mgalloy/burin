@@ -1,6 +1,6 @@
 VERSION=`python setup.py --version`
 
-.PHONY: clean dist doc test unit
+.PHONY: clean dist doc check test unit
 
 clean:
 	echo "cleaning..."
@@ -17,3 +17,6 @@ unit:
 
 dist:
 	python setup.py sdist
+
+check:
+	flake8

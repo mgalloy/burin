@@ -15,6 +15,6 @@ for i in range(8):
     y = scipy.signal.savgol_filter(y, 19, 2)
 
     plt.plot(x, y, label='data set %d' % i)
-    
+
 plt.legend()
 plt.show()
