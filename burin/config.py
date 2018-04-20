@@ -1,12 +1,13 @@
 import collections
 import configparser
 import datetime
+from typing import Any, Callable, Dict
 
 
 TYPES = {'int': int, 'bool': bool, 'str': str, 'float': float}
 
 
-def _apply_bool(value):
+def _apply_bool(value: str) -> bool:
     '''Converts value string to bool. Accepts case-insensitive yes/no or
        true/false. Unknown values raise TypeError.
     '''
@@ -21,7 +22,7 @@ def _apply_bool(value):
     return False
 
 
-def _apply_type(option_type, value):
+def _apply_type(option_type: Callable[[str], Any], value: str) -> Any:
     '''Apply option_type to value. Special rules for bool type to convert
        yes/no or true/false strings
     '''
@@ -34,7 +35,9 @@ def _apply_type(option_type, value):
         return option_type(value)
 
 
-def _parse_specline(specline):
+def _parse_specline(specline: str) -> Dict[str, Any]:
+    '''Parse a sting specline
+    '''
     option_type = str
     option_default = None
 
@@ -53,7 +56,7 @@ def _parse_specline(specline):
     return spec
 
 
-def _parse_spec(spec, section, option):
+def _parse_spec(spec: configparser.ConfigParser, section: str, option: str) -> Dict[str, Any]:
     '''Get specification for a given option. Returns a dict with keys
        "type" and "default".
     '''
@@ -66,12 +69,12 @@ class ConfigParser(configparser.ConfigParser):
        and uses types/defaults from the specification.
     '''
 
-    def __init__(self, spec_filename, **kwargs):
+    def __init__(self, spec_filename: str, **kwargs) -> None:
         super().__init__(**kwargs)
         self.specification = configparser.ConfigParser()
         self.specification.read(spec_filename)
 
-    def verified_get(self, section, option, raw=False):
+    def verified_get(self, section: str, option: str, raw=False) -> Any:
         '''Get an option using the type and default from the specification file.
         '''
         spec = _parse_spec(self.specification, section, option)
@@ -83,7 +86,7 @@ class ConfigParser(configparser.ConfigParser):
 
         return(_apply_type(spec['type'], value))
 
-    def validate(self, f):
+    def validate(self, f: str) -> bool:
         '''Verify that the given config file matches the specification.
         '''
         config = configparser.ConfigParser()
@@ -106,7 +109,11 @@ class ConfigParser(configparser.ConfigParser):
         return True
 
 
-def parse_datetime(s):
+def parse_datetime(s: str) -> datetime.datetime:
+    '''Parses a string in either YYYYMMDD or YYYYMMDD.HHMMSS formats.
+
+       Raises KeyError if not in a valid date or date/time formats.
+    '''
     if len(s) == 8:
         return datetime.datetime.strptime(s, '%Y%m%d')
     elif len(s) == 15:
@@ -117,7 +124,7 @@ def parse_datetime(s):
 
 class EpochParser:
 
-    def __init__(self, epochs_filename, epochs_spec_filename):
+    def __init__(self, epochs_filename: str, epochs_spec_filename: str) -> None:
         self.epochs = configparser.ConfigParser()
         self.epochs.read(epochs_filename)
 
@@ -126,7 +133,9 @@ class EpochParser:
 
         self.date = '00000000.000000'
 
-    def get(self, option):
+    def get(self, option: str) -> Any:
+        '''Get an option from the epoch closest, but before, the current time.
+        '''
         now = parse_datetime(self.date)
 
         specs = self.epochs_spec.defaults().copy()
@@ -145,7 +154,7 @@ class EpochParser:
 
         return _apply_type(specs[option]['type'], last[2])
 
-    def validate(self):
+    def validate(self) -> bool:
         '''Verify that all the variables in the epochs file are given in the
            specification file.
         '''
