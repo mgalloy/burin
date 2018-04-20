@@ -1,2 +1,3 @@
 # burin
-Python library for visualization
+
+Personal Python library
