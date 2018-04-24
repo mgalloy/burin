@@ -3,7 +3,9 @@ import configparser
 import datetime
 from typing import Any, Callable, Dict, TypeVar
 
+
 OptionValue = TypeVar('OptionValue', bool, float, int, str)
+DateValue = TypeVar('DateValue', str, datetime.datetime)
 
 TYPES = {'bool': bool, 'float': float, 'int': int, 'str': str}
 
@@ -62,7 +64,7 @@ def _parse_spec(spec: configparser.ConfigParser, section: str, option: str) -> D
        "type" and "default".
     '''
     specline = spec.get(section, option)
-    return(_parse_specline(specline))
+    return _parse_specline(specline)
 
 
 class ConfigParser(configparser.ConfigParser):
@@ -75,7 +77,7 @@ class ConfigParser(configparser.ConfigParser):
         self.specification = configparser.ConfigParser()
         self.specification.read(spec_filename)
 
-    def verified_get(self, section: str, option: str, raw=False) -> OptionValue:
+    def typed_get(self, section: str, option: str, raw=False) -> OptionValue:
         '''Get an option using the type and default from the specification file.
         '''
         spec = _parse_spec(self.specification, section, option)
@@ -85,7 +87,7 @@ class ConfigParser(configparser.ConfigParser):
 
         value = super().get(section, option, raw=raw)
 
-        return(_apply_type(spec['type'], value))
+        return _apply_type(spec['type'], value)
 
     def validate(self, f: str) -> bool:
         '''Verify that the given config file matches the specification.
@@ -115,12 +117,15 @@ def parse_datetime(s: str) -> datetime.datetime:
 
        Raises KeyError if not in a valid date or date/time formats.
     '''
-    if len(s) == 8:
-        return datetime.datetime.strptime(s, '%Y%m%d')
-    elif len(s) == 15:
-        return datetime.datetime.strptime(s, '%Y%m%d.%H%M%S')
+    if type(s) == str:
+        if len(s) == 8:
+            return datetime.datetime.strptime(s, '%Y%m%d')
+        elif len(s) == 15:
+            return datetime.datetime.strptime(s, '%Y%m%d.%H%M%S')
+        else:
+            raise ValueError
     else:
-        raise KeyError
+        return s
 
 
 class EpochParser:
@@ -132,12 +137,30 @@ class EpochParser:
         self.epochs_spec = configparser.ConfigParser()
         self.epochs_spec.read(epochs_spec_filename)
 
-        self.date = '00000000.000000'
+        self._date = None
 
-    def get(self, option: str) -> OptionValue:
-        '''Get an option from the epoch closest, but before, the current time.
+    @property
+    def date(self):
+        '''Get the current date as a `datetime.datetime` object.
         '''
-        now = parse_datetime(self.date)
+        return self._date
+
+    @date.setter
+    def date(self, date: DateValue):
+        '''Set the date with a string of the form YYYYMMDD or YYMMDD.HHMMSS or a
+           datetime.datetime object.
+        '''
+        self._date = parse_datetime(date)
+
+    def get(self, option: str, date: DateValue=None) -> OptionValue:
+        '''Get an option from the epoch closest, but before, the current time.
+
+           Either set the `date` property or pass the `date` keyword to set the
+           current time.
+        '''
+        now = self.date if date is None else parse_datetime(date)
+
+        if now is None: raise KeyError
 
         specs = self.epochs_spec.defaults().copy()
         for k in specs.keys():
