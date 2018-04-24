@@ -2,6 +2,7 @@ import burin
 
 # simple decorated routines that will be used by the unit tests
 
+
 @burin.units.convert(units='C')
 def example_ctemp(t):
     '''Example function that natively returns temperatures in C.'''
@@ -35,7 +36,8 @@ def test_ctemp_to_c():
 def test_ctemp_to_f():
     standards = [(0.0, 32.0), (100.0, 212.0)]
     for s in standards:
-        assert example_ctemp(s[0], units='F') == s[1], 'error converting %0.1f C to F' % s[0]
+        assert example_ctemp(s[0], units='F') == s[1], \
+            'error converting %0.1f C to F' % s[0]
 
 
 def test_ftemp_to_f():
@@ -49,7 +51,8 @@ def test_ftemp_to_f():
 def test_ftemp_to_c():
     standards = [(32.0, 0.0), (212.0, 100.0)]
     for s in standards:
-        assert example_ftemp(s[0], units='C') == s[1], 'error converting %0.1f F to C' % s[0]
+        assert example_ftemp(s[0], units='C') == s[1], \
+            'error converting %0.1f F to C' % s[0]
 
 
 def test_mdistance_to_m():
@@ -63,7 +66,8 @@ def test_mdistance_to_m():
 def test_mdistance_to_ft():
     standards = [(0.0, 0.0), (1.0, 3.28084), (-1.0, -3.28084)]
     for s in standards:
-        assert example_mdistance(s[0], units='ft') == s[1], 'error converting %0.1f m to ft' % s[0]
+        assert example_mdistance(s[0], units='ft') == s[1], \
+            'error converting %0.1f m to ft' % s[0]
 
 
 def test_ftdistance_to_ft():
@@ -77,4 +81,5 @@ def test_ftdistance_to_ft():
 def test_ftdistance_to_m():
     standards = [(0.0, 0.0), (1.0, 0.3048), (-1.0, -0.3048)]
     for s in standards:
-        assert example_ftdistance(s[0], units='m') == s[1], 'error converting %0.1f ft to m' % s[0]
+        assert example_ftdistance(s[0], units='m') == s[1], \
+            'error converting %0.1f ft to m' % s[0]

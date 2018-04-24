@@ -1,4 +1,3 @@
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -24,4 +23,5 @@ plt.legend()
 plt.title('Default burin scatter plot')
 plt.show()
 
-# print mpl.rcParams
+# import matplotlib as mpl
+# print(mpl.rcParams)

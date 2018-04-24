@@ -1,7 +1,6 @@
-import collections
 import configparser
 import datetime
-from typing import Any, Callable, Dict, TypeVar
+from typing import Callable, Dict, TypeVar
 
 
 OptionValue = TypeVar('OptionValue', bool, float, int, str)
@@ -25,7 +24,8 @@ def _apply_bool(value: str) -> bool:
     return False
 
 
-def _apply_type(option_type: Callable[[str], OptionValue], value: str) -> OptionValue:
+def _apply_type(option_type: Callable[[str], OptionValue],
+                value: str) -> OptionValue:
     '''Apply option_type to value. Special rules for bool type to convert
        yes/no or true/false strings
     '''
@@ -59,7 +59,9 @@ def _parse_specline(specline: str) -> Dict[str, OptionValue]:
     return spec
 
 
-def _parse_spec(spec: configparser.ConfigParser, section: str, option: str) -> Dict[str, OptionValue]:
+def _parse_spec(spec: configparser.ConfigParser,
+                section: str,
+                option: str) -> Dict[str, OptionValue]:
     '''Get specification for a given option. Returns a dict with keys
        "type" and "default".
     '''
@@ -130,7 +132,9 @@ def parse_datetime(s: str) -> datetime.datetime:
 
 class EpochParser:
 
-    def __init__(self, epochs_filename: str, epochs_spec_filename: str) -> None:
+    def __init__(self,
+                 epochs_filename: str,
+                 epochs_spec_filename: str) -> None:
         self.epochs = configparser.ConfigParser()
         self.epochs.read(epochs_filename)
 
@@ -160,7 +164,8 @@ class EpochParser:
         '''
         now = self.date if date is None else parse_datetime(date)
 
-        if now is None: raise KeyError
+        if now is None:
+            raise KeyError
 
         specs = self.epochs_spec.defaults().copy()
         for k in specs.keys():

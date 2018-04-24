@@ -95,8 +95,8 @@ def congrid(a, newdims, method='linear', center=False, minusone=False):
 
         return newa
     elif method in ['spline']:
-        oslices = [slice(0, j) for j in old]
-        oldcoords = np.ogrid[oslices]
+        # oslices = [slice(0, j) for j in old]
+        # oldcoords = np.ogrid[oslices]
         nslices = [slice(0, j) for j in list(newdims)]
         newcoords = np.mgrid[nslices]
 

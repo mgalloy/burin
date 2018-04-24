@@ -19,4 +19,4 @@ dist:
 	python setup.py sdist
 
 check:
-	flake8
+	flake8 burin unit examples
