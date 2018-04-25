@@ -6,7 +6,7 @@ clean:
 	echo "cleaning..."
 
 doc:
-	sphinx-apidoc -o docs/_api burin
+	sphinx-apidoc -f --ext-autodoc -o docs/_api burin
 	cd docs; make html
 
 test:
