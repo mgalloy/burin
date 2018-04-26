@@ -131,10 +131,15 @@ def parse_datetime(s: str) -> datetime.datetime:
 
 
 class EpochParser:
-
+    '''EpochParser parses config files with dates as section names. Retrieving
+       an option for a given date returns the option value on the date closest,
+       but before, the given date.
+    '''
     def __init__(self,
                  epochs_filename: str,
                  epochs_spec_filename: str) -> None:
+        '''Create an EpochParser from an epoch file and a specification.
+        '''
         self.epochs = configparser.ConfigParser()
         self.epochs.read(epochs_filename)
 
@@ -165,7 +170,7 @@ class EpochParser:
         now = self.date if date is None else parse_datetime(date)
 
         if now is None:
-            raise KeyError
+            raise KeyError('no date for access given')
 
         specs = self.epochs_spec.defaults().copy()
         for k in specs.keys():
@@ -175,7 +180,10 @@ class EpochParser:
         sec_dts = [parse_datetime(s) for s in secs]
         sorted_secs = sorted(zip(sec_dts, secs), key=lambda x: x[0])
 
-        last = (sorted_secs[0], sorted_secs[1], specs[option]['default'])
+        try:
+            last = (sorted_secs[0], sorted_secs[1], specs[option]['default'])
+        except KeyError:
+            raise KeyError('option name "%s" not found' % option)
 
         for dt, sec in sorted_secs:
             if dt <= now and self.epochs.has_option(sec, option):
