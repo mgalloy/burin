@@ -115,19 +115,26 @@ class ConfigParser(configparser.ConfigParser):
 
 
 def parse_datetime(s: str) -> datetime.datetime:
-    '''Parses a string in either YYYYMMDD or YYYYMMDD.HHMMSS formats.
+    '''Parses a string in either YYYYMMDD or YYYYMMDD.HHMMSS formats. Also,
+       passes a datetime object through without change.
 
-       Raises KeyError if not in a valid date or date/time formats.
+       Raises `ValueError` if not in a valid datetime or string in recognized
+       date/time formats.
     '''
     if type(s) == str:
+        # TODO: should use a date parsing library for this to recognize more
+        #       formats for dates
         if len(s) == 8:
             return datetime.datetime.strptime(s, '%Y%m%d')
         elif len(s) == 15:
             return datetime.datetime.strptime(s, '%Y%m%d.%H%M%S')
         else:
-            raise ValueError
+            raise ValueError('unrecognized format for string date')
     else:
-        return s
+        if isinstance(s, datetime.datetime):
+            return s
+        else:
+            raise ValueError('datetime must be a str or datetime object')
 
 
 class EpochParser:
@@ -135,11 +142,10 @@ class EpochParser:
        an option for a given date returns the option value on the date closest,
        but before, the given date.
     '''
+
     def __init__(self,
                  epochs_filename: str,
                  epochs_spec_filename: str) -> None:
-        '''Create an EpochParser from an epoch file and a specification.
-        '''
         self.epochs = configparser.ConfigParser()
         self.epochs.read(epochs_filename)
 
