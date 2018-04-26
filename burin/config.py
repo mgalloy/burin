@@ -47,15 +47,16 @@ def _parse_specline(specline: str) -> Dict[str, OptionValue]:
     for token in specline.split(','):
         name, value = token.split('=')
         name = name.strip()
-        if name.strip() == 'type':
+        if name == 'type':
             option_type = TYPES[value.strip()]
         elif name == 'default':
             option_default = value.strip()
         else:
-            pass
+            raise KeyError('unknown option attribute %s' % name)
 
     spec = {'type': option_type,
             'default': _apply_type(option_type, option_default)}
+
     return spec
 
 
@@ -72,6 +73,8 @@ def _parse_spec(spec: configparser.ConfigParser,
 class ConfigParser(configparser.ConfigParser):
     '''ConfigParser subclass which can verify a config file against a specification
        and uses types/defaults from the specification.
+
+       Todo: handle list of a type
     '''
 
     def __init__(self, spec_filename: str, **kwargs) -> None:
