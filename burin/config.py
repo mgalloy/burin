@@ -1,5 +1,6 @@
 import configparser
 import datetime
+import io
 from typing import Callable, Dict, TypeVar
 
 
@@ -52,7 +53,7 @@ def _parse_specline(specline: str) -> Dict[str, OptionValue]:
         elif name == 'default':
             option_default = value.strip()
         else:
-            raise KeyError('unknown option attribute %s' % name)
+            raise ConfigParser.OptionError(f'unknown option attribute {name}')
 
     spec = {'type': option_type,
             'default': _apply_type(option_type, option_default)}
@@ -92,7 +93,36 @@ class ConfigParser(configparser.ConfigParser):
 
         value = super().get(section, option, raw=raw)
 
-        return _apply_type(spec['type'], value)
+        return value if raw else _apply_type(spec['type'], value)
+
+    def _write(self, fileobject):
+        max_len = 0
+        for s in self.specification.sections():
+            for o in self.specification.options(s):
+                max_len = max(max_len, len(o))
+
+        new_line = '\n'
+        first_section = True
+        for s in self.specification.sections():
+            new_line = '' if first_section else '\n'
+            fileobject.write(f'{new_line}[{s}]\n')
+            first_section = False
+            for o in self.specification.options(s):
+                v = self.typed_get(s, o)
+                fileobject.write(f'{o:{max_len}s} = {v}\n')
+
+    def write(self, file):
+        if isinstance(file, str):
+            with open(file, 'w') as f:
+                self._write(f)
+        else:
+            self._write(file)
+
+    def __str__(self):
+        f = io.StringIO()
+        self._write(f)
+        f.seek(0)
+        return f.read()
 
     def validate(self, f: str) -> bool:
         '''Verify that the given config file matches the specification.
@@ -103,16 +133,22 @@ class ConfigParser(configparser.ConfigParser):
         # check that every option given by f is in specification
         for s in config.sections():
             for o in config.options(s):
+                if config.has_option('DEFAULT', o):
+                    continue
                 if not self.specification.has_option(s, o):
                     return False
 
         # check that all options without a default value are given by f
         for s in self.specification.sections():
             for o in self.specification.options(s):
+                if self.specification.has_option('DEFAULT', o):
+                    continue
                 spec = _parse_spec(self.specification, s, o)
                 if spec['default'] is None:
                     if not config.has_option(s, o):
                         return False
+
+        # TODO: make sure values are the correct type
 
         return True
 
@@ -192,7 +228,7 @@ class EpochParser:
         try:
             last = (sorted_secs[0], sorted_secs[1], specs[option]['default'])
         except KeyError:
-            raise KeyError('option name "%s" not found' % option)
+            raise KeyError(f'option name "{option}" not found')
 
         for dt, sec in sorted_secs:
             if dt <= now and self.epochs.has_option(sec, option):
@@ -209,7 +245,6 @@ class EpochParser:
         for s in self.epochs.sections():
             for o in self.epochs.options(s):
                 if o not in varnames:
-                    print('%s, %s' % (s, o))
                     return False
 
         return True
