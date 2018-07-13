@@ -7,11 +7,11 @@ def test_config_validate():
     d = os.path.dirname(os.path.realpath(__file__))
     cp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
 
-    assert(cp.validate(os.path.join(d, 'good.cfg')))
-    assert(cp.validate(os.path.join(d, 'interp.cfg')))
-    assert(not cp.validate(os.path.join(d, 'missing_option.cfg')))
-    assert(not cp.validate(os.path.join(d, 'extra_option.cfg')))
-    assert(not cp.validate(os.path.join(d, 'extra_section.cfg')))
+    assert(cp.is_valid(os.path.join(d, 'good.cfg')))
+    assert(cp.is_valid(os.path.join(d, 'interp.cfg')))
+    assert(not cp.is_valid(os.path.join(d, 'missing_option.cfg')))
+    assert(not cp.is_valid(os.path.join(d, 'extra_option.cfg')))
+    assert(not cp.is_valid(os.path.join(d, 'extra_section.cfg')))
 
 
 def test_config_typed_get():

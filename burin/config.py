@@ -124,7 +124,7 @@ class ConfigParser(configparser.ConfigParser):
         f.seek(0)
         return f.read()
 
-    def validate(self, f: str) -> bool:
+    def is_valid(self, f: str) -> bool:
         '''Verify that the given config file matches the specification.
         '''
         config = configparser.ConfigParser()
@@ -193,6 +193,9 @@ class EpochParser:
 
         self._date = None
 
+        if not self.is_valid():
+            raise KeyError('epochs filename does not satisfy specification')
+
     @property
     def date(self):
         '''Get the current date as a `datetime.datetime` object.
@@ -236,7 +239,7 @@ class EpochParser:
 
         return _apply_type(specs[option]['type'], last[2])
 
-    def validate(self) -> bool:
+    def is_valid(self) -> bool:
         '''Verify that all the variables in the epochs file are given in the
            specification file.
         '''

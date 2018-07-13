@@ -11,7 +11,7 @@ def test_epoch_validate():
     epochs_filename = os.path.join(d, 'epochs.cfg')
     spec_filename = os.path.join(d, 'epochs_spec.cfg')
     ep = burin.config.EpochParser(epochs_filename, spec_filename)
-    assert(ep.validate())
+    assert(ep.is_valid())
 
 
 def test_epoch_get():
