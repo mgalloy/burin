@@ -1,8 +1,9 @@
+import datetime
 import functools
 import logging
+import math
 import random
 import time
-
 
 logger = logging.getLogger()
 
@@ -16,66 +17,90 @@ class WrappedFormatter(logging.Formatter):
         return super(WrappedFormatter, self).format(record)
 
 
-def step(logger=logger):
+def human_timedelta(timedelta):
+    secs = timedelta.total_seconds()
+
+    units = [('day', 60 * 60 * 24),
+             ('hr', 60 * 60),
+             ('min', 60),
+             ('sec', 1)]
+    parts = []
+    for unit, mul in units:
+        if secs / mul >= 1 or mul == 1:
+            if mul > 1:
+                n = int(math.floor(secs / mul))
+                secs -= n * mul
+            else:
+                n = '%d' % secs
+            parts.append("%s %s%s" % (n, unit, '' if n == 1 else "s"))
+    return ' '.join(parts)
+
+
+def step():
     def actual_decorator(func):
         @functools.wraps(func)
         def func_wrapper(*args, skip=False, **kwargs):
-            #log_options = {'funcName_override': func.__name__}
-            log_options = {'func': func}
+            e = {'func': func}
+
             if skip:
                 if logger:
-                    logger.info(f'skipping {func.__name__}', extra=log_options)
+                    logger.info(f'skipping {func.__name__}', extra=e)
             else:
                 if logger:
-                    logger.info(f'starting {func.__name__}', extra=log_options)
-                start_time = time.time()
+                    logger.info(f'starting {func.__name__}', extra=e)
+                    start_dt = datetime.datetime.now()
                 func(*args, **kwargs)
-                end_time = time.time()
                 if logger:
-                    logger.info(f'done with {func.__name__}: {end_time - start_time:0.1f} sec',
-                                extra=log_options)
+                    end_dt = datetime.datetime.now()
+                    time_interval = end_dt - start_dt
+                    human_time = human_timedelta(time_interval)
+                    logger.info(f'done with {func.__name__}: {human_time}',
+                                extra=e)
 
         return func_wrapper
     return actual_decorator
 
 
-@step(logger=logger)
+n = 3
+
+
+@step()
 def inventory():
     logger.debug('doing inventory stuff...')
-    time.sleep(3.0 * random.random())
+    time.sleep(n * random.random())
 
 
-@step(logger=logger)
+@step()
 def l1_process():
     logger.debug('L1 processing stuff...')
-    time.sleep(3.0 * random.random())
+    time.sleep(n * random.random())
 
 
-@step(logger=logger)
+@step()
 def averaging():
     logger.debug('doing averaging stuff...')
-    time.sleep(3.0 * random.random())
+    time.sleep(n * random.random())
 
 
-@step(logger=logger)
+@step()
 def dynamics():
     logger.debug('doing dynamics stuff...')
-    time.sleep(3.0 * random.random())
+    time.sleep(n * random.random())
 
 
-@step(logger=logger)
+@step()
 def polarization():
     logger.debug('doing polarization stuff...')
-    time.sleep(3.0 * random.random())
+    time.sleep(n * random.random())
 
 
-@step(logger=logger)
+@step()
 def quick_invert():
     logger.debug('doing quick invert stuff...')
-    time.sleep(3.0 * random.random())
+    time.sleep(n * random.random())
 
 
-@step(logger=logger)
+@step()
 def l2_process():
     logger.debug('L2 processing stuff...')
     averaging()
@@ -84,22 +109,23 @@ def l2_process():
     quick_invert()
 
 
-@step(logger=logger)
+@step()
 def main():
     inventory(skip=False)
     l1_process(skip=False)
     l2_process()
 
 
-def setup():
+def setup_logger():
     handler = logging.StreamHandler()
     formatter = WrappedFormatter('%(asctime)s %(funcName)s: %(levelname)s: %(message)s',
                                  datefmt='%Y-%m-%d %H:%M:%S')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
+    return logger
 
 
 if __name__ == '__main__':
-    setup()
+    setup_logger()
     main()
