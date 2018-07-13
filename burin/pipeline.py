@@ -2,8 +2,6 @@ import datetime
 import functools
 import logging
 import math
-import random
-import time
 
 logger = logging.getLogger()
 
@@ -61,71 +59,25 @@ def step():
     return actual_decorator
 
 
-n = 3
 
+class Run:
 
-@step()
-def inventory():
-    logger.debug('doing inventory stuff...')
-    time.sleep(n * random.random())
+    def __init__(self, options, epochs):
+        self.options = options
 
+        self.epochs = epochs
+        if not self.epochs.validate():
+            # TODO: throw exception
+            pass
 
-@step()
-def l1_process():
-    logger.debug('L1 processing stuff...')
-    time.sleep(n * random.random())
+        self.logger = self.setup_logging()
 
-
-@step()
-def averaging():
-    logger.debug('doing averaging stuff...')
-    time.sleep(n * random.random())
-
-
-@step()
-def dynamics():
-    logger.debug('doing dynamics stuff...')
-    time.sleep(n * random.random())
-
-
-@step()
-def polarization():
-    logger.debug('doing polarization stuff...')
-    time.sleep(n * random.random())
-
-
-@step()
-def quick_invert():
-    logger.debug('doing quick invert stuff...')
-    time.sleep(n * random.random())
-
-
-@step()
-def l2_process():
-    logger.debug('L2 processing stuff...')
-    averaging()
-    dynamics()
-    polarization()
-    quick_invert()
-
-
-@step()
-def main():
-    inventory(skip=False)
-    l1_process(skip=False)
-    l2_process()
-
-
-def setup_logger():
-    handler = logging.StreamHandler()
-    formatter = WrappedFormatter('%(asctime)s %(funcName)s: %(levelname)s: %(message)s',
-                                 datefmt='%Y-%m-%d %H:%M:%S')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(logging.DEBUG)
-    return logger
-
-
-if __name__ == '__main__':
-    setup_logger()
-    main()
+    def setup_logging(self):
+        # TODO: use options to configure logger
+        handler = logging.StreamHandler()
+        formatter = WrappedFormatter('%(asctime)s %(funcName)s: %(levelname)s: %(message)s',
+                                     datefmt='%Y-%m-%d %H:%M:%S')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
+        return logger
