@@ -19,31 +19,31 @@ def test_config_typed_get():
     cp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
     cp.read(os.path.join(d, 'good.cfg'))
 
-    basedir = cp.typed_get('logging', 'basedir')
+    basedir = cp.get('logging', 'basedir')
     assert(type(basedir) == str)
     assert(basedir == '/Users/mgalloy/data')
 
-    rotate = cp.typed_get('logging', 'rotate')
+    rotate = cp.get('logging', 'rotate')
     assert(type(rotate) == bool)
     assert(not rotate)
 
-    max_version = cp.typed_get('logging', 'max_version')
+    max_version = cp.get('logging', 'max_version')
     assert(type(max_version) == int)
     assert(max_version == 3)
 
 
-def test_config_get():
+def test_config_raw_get():
     d = os.path.dirname(os.path.realpath(__file__))
     cp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
     cp.read(os.path.join(d, 'good.cfg'))
 
-    basedir = cp.get('logging', 'basedir')
+    basedir = cp.get('logging', 'basedir', raw=True)
     assert(basedir == '/Users/mgalloy/data')
 
-    rotate = cp.get('logging', 'rotate')
+    rotate = cp.get('logging', 'rotate', raw=True)
     assert(rotate == 'NO')
 
-    max_version = cp.get('logging', 'max_version')
+    max_version = cp.get('logging', 'max_version', raw=True)
     assert(max_version == '3')
 
 
@@ -54,12 +54,6 @@ def test_config_interp():
 
     basedir = cp.get('logging', 'basedir')
     assert(basedir == '/Users/mgalloy/data')
-
-    rotate = cp.get('logging', 'rotate')
-    assert(rotate == 'NO')
-
-    max_version = cp.get('logging', 'max_version')
-    assert(max_version == '3')
 
 
 def test_config_verified_get_list():
