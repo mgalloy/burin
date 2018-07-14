@@ -4,7 +4,7 @@ import time
 
 import burin
 
-n = 3
+n = 5
 
 
 @burin.pipeline.step()
@@ -55,14 +55,14 @@ def l2_process(run):
 @burin.pipeline.step()
 def main(run):
     inventory(run, skip=False)
-    l1_process(run, skip=not run.options.typed_get('level1', 'process'))
-    l2_process(run, skip=not run.options.typed_get('level2', 'process'))
+    l1_process(run, skip=not run.options.get('level1', 'process'))
+    l2_process(run, skip=not run.options.get('level2', 'process'))
 
 
 if __name__ == '__main__':
     # initialize the run
     config = burin.config.ConfigParser('example_spec.cfg')
-    if config.validate('example.cfg'):
+    if config.is_valid('example.cfg'):
         config.read('example.cfg')
     epochs = burin.config.EpochParser('epochs.cfg', 'epochs_spec.cfg')
     run = burin.pipeline.Run(config, epochs)
