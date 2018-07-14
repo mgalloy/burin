@@ -3,6 +3,9 @@ import functools
 import logging
 import math
 
+import burin
+
+
 logger = logging.getLogger()
 
 
@@ -66,14 +69,17 @@ class Run:
         self.options = options
         self.epochs = epochs
 
-        self.logger = self.setup_logging()
+    def setup_logging(self, filename, level=logging.DEBUG, rotate=False, max_version=None):
+        if rotate:
+            burin.logging.rotate_logs(filename, max_version=max_version)
 
-    def setup_logging(self):
-        # TODO: use options to configure logger
-        handler = logging.StreamHandler()
+        handler = logging.FileHandler(filename)
+        logger.addHandler(handler)
+
         formatter = WrappedFormatter('%(asctime)s %(funcName)s: %(levelname)s: %(message)s',
                                      datefmt='%Y-%m-%d %H:%M:%S')
         handler.setFormatter(formatter)
-        logger.addHandler(handler)
-        logger.setLevel(logging.DEBUG)
-        return logger
+
+        logger.setLevel(level)
+
+        self.logger = logger
