@@ -2,6 +2,7 @@
 '''
 
 import glob
+import logging
 import os
 import re
 
@@ -40,3 +41,12 @@ def rotate_logs(basename, max_version=None):
         os.rename(basename, f'{basename}.1')
     else:
         os.remove(basename)
+
+
+def get_level(level_name):
+    levels = {'CRITICAL': logging.CRITICAL,
+              'ERROR': logging.ERROR,
+              'WARNING': logging.WARNING,
+              'INFO': logging.INFO,
+              'DEBUG': logging.DEBUG}
+    return levels[level_name.upper()]
