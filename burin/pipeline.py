@@ -64,11 +64,7 @@ class Run:
 
     def __init__(self, options, epochs):
         self.options = options
-
         self.epochs = epochs
-        if not self.epochs.validate():
-            # TODO: throw exception
-            pass
 
         self.logger = self.setup_logging()
 
