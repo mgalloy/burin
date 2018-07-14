@@ -62,22 +62,23 @@ def step():
     return actual_decorator
 
 
-
 class Run:
 
     def __init__(self, options, epochs):
         self.options = options
         self.epochs = epochs
 
-    def setup_logging(self, filename, level=logging.DEBUG, rotate=False, max_version=None):
+    def setup_logging(self, filename, level=logging.DEBUG, rotate=False,
+                      max_version=None):
         if rotate:
             burin.logging.rotate_logs(filename, max_version=max_version)
 
         handler = logging.FileHandler(filename)
         logger.addHandler(handler)
 
-        formatter = WrappedFormatter('%(asctime)s %(funcName)s: %(levelname)s: %(message)s',
-                                     datefmt='%Y-%m-%d %H:%M:%S')
+        fmt = '%(asctime)s %(funcName)s: %(levelname)s: %(message)s'
+        datefmt = '%Y-%m-%d %H:%M:%S'
+        formatter = WrappedFormatter(fmt, datefmt=datefmt)
         handler.setFormatter(formatter)
 
         logger.setLevel(level)

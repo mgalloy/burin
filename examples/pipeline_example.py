@@ -1,4 +1,3 @@
-import logging
 import os
 import random
 import time
@@ -68,9 +67,11 @@ if __name__ == '__main__':
     epochs = burin.config.EpochParser('epochs.cfg', 'epochs_spec.cfg')
     run = burin.pipeline.Run(config, epochs)
 
-    log_filename = os.path.join(config.get('logging', 'basedir'), f'example.log')
+    log_filename = os.path.join(config.get('logging', 'basedir'),
+                                'example.log')
+    log_level = burin.logging.get_level(config.get('logging', 'level'))
     run.setup_logging(log_filename,
-                      level=burin.logging.get_level(config.get('logging', 'level')),
+                      level=log_level,
                       rotate=config.get('logging', 'rotate'),
                       max_version=config.get('logging', 'max_version'))
     print(f'See log output in {log_filename}')

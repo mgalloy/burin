@@ -83,7 +83,8 @@ class ConfigParser(configparser.ConfigParser):
         self.specification = configparser.ConfigParser()
         self.specification.read(spec_filename)
 
-    def get(self, section: str, option: str, raw=False, **kwargs) -> OptionValue:
+    def get(self, section: str, option: str, raw=False,
+            **kwargs) -> OptionValue:
         '''Get an option using the type and default from the specification file.
         '''
         spec = _parse_spec(self.specification, section, option)

@@ -4,7 +4,6 @@
 import glob
 import logging
 import os
-import re
 
 
 def rotate_logs(basename, max_version=None):
