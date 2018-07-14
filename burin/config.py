@@ -72,8 +72,8 @@ def _parse_spec(spec: configparser.ConfigParser,
 
 
 class ConfigParser(configparser.ConfigParser):
-    '''ConfigParser subclass which can verify a config file against a specification
-       and uses types/defaults from the specification.
+    '''ConfigParser subclass which can verify a config file against a
+       specification and uses types/defaults from the specification.
 
        Todo: handle list of a type
     '''
