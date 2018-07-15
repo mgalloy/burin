@@ -36,15 +36,21 @@ def rotate_logs(basename, max_version=None):
             os.rename(f'{basename}.{v}', f'{basename}.{v+1}')
 
     # move original if space
-    if max_version is not None and max_version > 0:
-        os.rename(basename, f'{basename}.1')
-    else:
+    if max_version is not None and max_version == 0:
         os.remove(basename)
+    else:
+        os.rename(basename, f'{basename}.1')
 
 
 def get_level(level_name):
+    '''Convert a string name to a logging level constant value.
+
+       level_name : str
+         case insensitive level name
+    '''
     levels = {'CRITICAL': logging.CRITICAL,
               'ERROR': logging.ERROR,
+              'WARN': logging.WARN,
               'WARNING': logging.WARNING,
               'INFO': logging.INFO,
               'DEBUG': logging.DEBUG}
