@@ -4,6 +4,7 @@ import burin
 
 
 def test_config_validate():
+    '''Test validating config files.'''
     d = os.path.dirname(os.path.realpath(__file__))
     cp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
 
@@ -15,6 +16,7 @@ def test_config_validate():
 
 
 def test_config_typed_get():
+    '''Test getting typed values from the config file.'''
     d = os.path.dirname(os.path.realpath(__file__))
     cp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
     cp.read(os.path.join(d, 'good.cfg'))
@@ -33,6 +35,7 @@ def test_config_typed_get():
 
 
 def test_config_raw_get():
+    '''Test getting raw values from the config file.'''
     d = os.path.dirname(os.path.realpath(__file__))
     cp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
     cp.read(os.path.join(d, 'good.cfg'))
@@ -48,6 +51,7 @@ def test_config_raw_get():
 
 
 def test_config_interp():
+    '''Test using interpolation in values.'''
     d = os.path.dirname(os.path.realpath(__file__))
     cp = burin.config.ConfigParser(os.path.join(d, 'spec.cfg'))
     cp.read(os.path.join(d, 'interp.cfg'))

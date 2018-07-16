@@ -101,6 +101,7 @@ def test_no_basename(create_testdir):
 
 
 def test_get_level():
+    '''Test get_level routine to convert names to logging levels.'''
     levels = [('debug', logging.DEBUG),
               ('info', logging.INFO),
               ('warn', logging.WARN),
@@ -110,8 +111,5 @@ def test_get_level():
     for name, level in levels:
         assert burin.logging.get_level(name) == level
 
-    try:
+    with pytest.raises(KeyError):
         bad_level = burin.logging.get_level('bad_name')
-    except KeyError:
-        # this is success
-        pass

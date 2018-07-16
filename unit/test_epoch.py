@@ -7,6 +7,7 @@ import burin
 
 
 def test_epoch_validate():
+    '''Test validating an epoch file.'''
     d = os.path.dirname(os.path.realpath(__file__))
     epochs_filename = os.path.join(d, 'epochs.cfg')
     spec_filename = os.path.join(d, 'epochs_spec.cfg')
@@ -15,6 +16,7 @@ def test_epoch_validate():
 
 
 def test_epoch_get():
+    '''Test getting epoch values.'''
     d = os.path.dirname(os.path.realpath(__file__))
     epochs_filename = os.path.join(d, 'epochs.cfg')
     spec_filename = os.path.join(d, 'epochs_spec.cfg')
